@@ -16,7 +16,7 @@ It automates:
 Add the package as a dependency to your scripts project:
 
 ```bash
-dart pub add mad_navigation_cli
+dart pub add mad_navigation_cli --dev
 ```
 
 Then run the built-in command via the **mad scripts CLI**:
