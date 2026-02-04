@@ -18,7 +18,8 @@ class RouteInsertionException extends AddRouteException {
   /// Creates a new [RouteInsertionException].
   ///
   /// [path] should contain the file path where the insertion failed.
-  RouteInsertionException(String path) : super("Can't insert new page in $path");
+  RouteInsertionException(String path)
+    : super("Can't insert new page in $path");
 }
 
 /// Thrown when a suitable mapper class (extending `MadRouteMapper`)
@@ -30,7 +31,8 @@ class MapperNotFoundException extends AddRouteException {
   /// Creates a new [MapperNotFoundException].
   ///
   /// [path] is the mapper file where the failure occurred.
-  MapperNotFoundException(String path) : super("Can't find or insert page mapper in $path");
+  MapperNotFoundException(String path)
+    : super("Can't find or insert page mapper in $path");
 }
 
 /// Thrown when the `routers` method in the mapper file
@@ -42,7 +44,8 @@ class RoutersMethodInvalidException extends AddRouteException {
   /// Creates a new [RoutersMethodInvalidException].
   ///
   /// [path] identifies the mapper file where parsing failed.
-  RoutersMethodInvalidException(String path) : super("Invalid 'routers' method body structure in $path");
+  RoutersMethodInvalidException(String path)
+    : super("Invalid 'routers' method body structure in $path");
 }
 
 /// Thrown when a navigation service class could not be found
@@ -54,5 +57,6 @@ class ServiceInsertionException extends AddRouteException {
   /// Creates a new [ServiceInsertionException].
   ///
   /// [path] is the service file that failed to update.
-  ServiceInsertionException(String path) : super("Can't insert new method in $path");
+  ServiceInsertionException(String path)
+    : super("Can't insert new method in $path");
 }

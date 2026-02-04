@@ -21,7 +21,12 @@ class RouteMeta {
   ///
   /// The [typeName] and [baseClass] parameters are required.
   /// The [generic] type defaults to `'Never'`, and [isInTab] defaults to `false`.
-  const RouteMeta({this.typeName = '', required this.baseClass, this.isInTab = false, this.generic = _defaultGeneric});
+  const RouteMeta({
+    this.typeName = '',
+    required this.baseClass,
+    this.isInTab = false,
+    this.generic = _defaultGeneric,
+  });
 
   /// The default generic type used when no specific generic is provided.
   static const String _defaultGeneric = 'Never';
@@ -100,14 +105,27 @@ class RouteMeta {
 /// ```
 abstract final class RouteMetas {
   /// Metadata for a standard page route.
-  static const RouteMeta page = RouteMeta(typeName: 'Page', baseClass: 'NavPage');
+  static const RouteMeta page = RouteMeta(
+    typeName: 'Page',
+    baseClass: 'NavPage',
+  );
 
   /// Metadata for a bottom sheet route.
-  static const RouteMeta bottomSheet = RouteMeta(typeName: 'BottomSheet', baseClass: 'NavBottomSheet');
+  static const RouteMeta bottomSheet = RouteMeta(
+    typeName: 'BottomSheet',
+    baseClass: 'NavBottomSheet',
+  );
 
   /// Metadata for a dialog route.
-  static const RouteMeta dialog = RouteMeta(typeName: 'Dialog', baseClass: 'NavDialog');
+  static const RouteMeta dialog = RouteMeta(
+    typeName: 'Dialog',
+    baseClass: 'NavDialog',
+  );
 
   /// Metadata for a tab holder route, typically used for tab containers.
-  static const RouteMeta tabHolder = RouteMeta(typeName: 'TabHolder', baseClass: 'NavTabHolder', isInTab: true);
+  static const RouteMeta tabHolder = RouteMeta(
+    typeName: 'TabHolder',
+    baseClass: 'NavTabHolder',
+    isInTab: true,
+  );
 }

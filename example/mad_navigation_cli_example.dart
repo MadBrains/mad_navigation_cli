@@ -28,14 +28,21 @@ Future<void> main(List<String> args) async {
 /// - updates the route mapper.
 Future<void> customMeta() async {
   // Load config from file. Adjust the path to your setup.
-  final AddRouteConfig config = ConfigReader.fromFile('mad_navigation.json', transformer: AddRouteConfig.fromJson);
+  final AddRouteConfig config = ConfigReader.fromFile(
+    'mad_navigation.json',
+    transformer: AddRouteConfig.fromJson,
+  );
 
   // Define a custom route meta (you may also use RouteMetas.page/dialog/bottomSheet/tabHolder).
   const RouteMeta meta = RouteMeta(baseClass: 'MyPage', typeName: 'MyPageType');
 
   // Create a simple orchestrator and run full flow.
   const String routeName = 'Settings';
-  final SimpleAddRoute add = SimpleAddRoute(routeName: routeName, config: config, meta: meta);
+  final SimpleAddRoute add = SimpleAddRoute(
+    routeName: routeName,
+    config: config,
+    meta: meta,
+  );
 
   try {
     await add.run(uiComponent: 'SettingsPage()');
@@ -52,20 +59,37 @@ Future<void> customMeta() async {
 /// Useful when you want to adjust WHERE/HOW things are inserted
 /// (e.g., custom heuristics, logging, formatting, templates).
 class CustomAddRoute extends AddRoute {
-  const CustomAddRoute({required super.routeName, required super.config, required super.meta});
+  const CustomAddRoute({
+    required super.routeName,
+    required super.config,
+    required super.meta,
+  });
 
   Future<void> run() async {
     // 1) Insert just the route class (you could also do full flow manually if desired)
     await addRouteClass(
-      renderedTemplate: RouteTemplates.routeClass(meta: meta, routeName: routeName),
+      renderedTemplate: RouteTemplates.routeClass(
+        meta: meta,
+        routeName: routeName,
+      ),
       baseClass: meta.baseClass,
     );
 
     // 2) Add to services (abstract + impl)
-    final String method = RouteTemplates.methodName(meta: meta, routeName: routeName);
+    final String method = RouteTemplates.methodName(
+      meta: meta,
+      routeName: routeName,
+    );
     await addToService(
-      renderedServiceTemplate: RouteTemplates.abstractServiceMethod(meta: meta, methodName: method),
-      renderedServiceImplTemplate: RouteTemplates.serviceMethod(meta: meta, methodName: method, routeName: routeName),
+      renderedServiceTemplate: RouteTemplates.abstractServiceMethod(
+        meta: meta,
+        methodName: method,
+      ),
+      renderedServiceImplTemplate: RouteTemplates.serviceMethod(
+        meta: meta,
+        methodName: method,
+        routeName: routeName,
+      ),
     );
 
     // 3) Add to mapper with a custom component
@@ -75,7 +99,11 @@ class CustomAddRoute extends AddRoute {
         routeName: routeName,
         uiComponent: 'ConfirmSignOutDialog()',
       ),
-      renderedTemplate: RouteTemplates.mapper(meta: meta, routeName: routeName, uiComponent: 'ConfirmSignOutDialog()'),
+      renderedTemplate: RouteTemplates.mapper(
+        meta: meta,
+        routeName: routeName,
+        uiComponent: 'ConfirmSignOutDialog()',
+      ),
     );
   }
 
@@ -96,14 +124,25 @@ class CustomAddRoute extends AddRoute {
 }
 
 Future<void> customAddRoute() async {
-  final AddRouteConfig config = ConfigReader.fromFile('mad_navigation.json', transformer: AddRouteConfig.fromJson);
+  final AddRouteConfig config = ConfigReader.fromFile(
+    'mad_navigation.json',
+    transformer: AddRouteConfig.fromJson,
+  );
 
   // Suppose we want a dialog returning a bool? result.
-  const RouteMeta meta = RouteMeta(typeName: 'Dialog', baseClass: 'NavDialog', generic: 'bool');
+  const RouteMeta meta = RouteMeta(
+    typeName: 'Dialog',
+    baseClass: 'NavDialog',
+    generic: 'bool',
+  );
 
   const String routeName = 'ConfirmSignOut';
 
-  final CustomAddRoute add = CustomAddRoute(routeName: routeName, config: config, meta: meta);
+  final CustomAddRoute add = CustomAddRoute(
+    routeName: routeName,
+    config: config,
+    meta: meta,
+  );
 
   try {
     await add.run();
@@ -119,14 +158,24 @@ Future<void> customAddRoute() async {
 /// Sometimes you only need a part of the pipeline, e.g., just add a mapper
 /// entry for an already existing route class, or only add service methods.
 Future<void> rawUseAddRoute() async {
-  final AddRouteConfig config = ConfigReader.fromFile('mad_navigation.json', transformer: AddRouteConfig.fromJson);
+  final AddRouteConfig config = ConfigReader.fromFile(
+    'mad_navigation.json',
+    transformer: AddRouteConfig.fromJson,
+  );
 
   // Let’s say the class already exists, we only need to append a mapper entry.
-  const RouteMeta meta = RouteMeta(typeName: 'BottomSheet', baseClass: 'NavBottomSheet');
+  const RouteMeta meta = RouteMeta(
+    typeName: 'BottomSheet',
+    baseClass: 'NavBottomSheet',
+  );
 
   const String routeName = 'SelectTheme';
 
-  final AddRoute partial = AddRoute(routeName: routeName, config: config, meta: meta);
+  final AddRoute partial = AddRoute(
+    routeName: routeName,
+    config: config,
+    meta: meta,
+  );
 
   try {
     // CASE A: Only mapper
@@ -136,7 +185,11 @@ Future<void> rawUseAddRoute() async {
         routeName: routeName,
         uiComponent: 'SelectThemeSheet()',
       ),
-      renderedTemplate: RouteTemplates.mapper(meta: meta, routeName: routeName, uiComponent: 'SelectThemeSheet()'),
+      renderedTemplate: RouteTemplates.mapper(
+        meta: meta,
+        routeName: routeName,
+        uiComponent: 'SelectThemeSheet()',
+      ),
     );
 
     // CASE B: Only services (uncomment if needed)

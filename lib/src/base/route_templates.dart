@@ -23,7 +23,10 @@ class RouteTemplates {
   /// - The template currently uses `Nav{{TYPE}}` as a base class,
   ///   even though [RouteMeta.baseClass] is provided to the values map.
   /// - The generic is taken from [RouteMeta.generic] (defaults to `'Never'`).
-  static String routeClass({required RouteMeta meta, required String routeName}) {
+  static String routeClass({
+    required RouteMeta meta,
+    required String routeName,
+  }) {
     const String _routeTemplate = '''
 class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
   {{TYPE}}{{NAME}}() : super('{{ROUTE_NAME}}');
@@ -34,7 +37,8 @@ class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
       values: <String, dynamic>{
         'TYPE': meta.typeName,
         'NAME': routeName,
-        'BASE_CLASS': meta.baseClass, // kept for compatibility, not used in template
+        'BASE_CLASS':
+            meta.baseClass, // kept for compatibility, not used in template
         'GENERIC': meta.generic,
         'ROUTE_NAME': meta.routeName(routeName),
       },
@@ -47,7 +51,10 @@ class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
   /// ```
   /// openPageSettings
   /// ```
-  static String methodName({required RouteMeta meta, required String routeName}) {
+  static String methodName({
+    required RouteMeta meta,
+    required String routeName,
+  }) {
     const String _methodTemplate = '''open{{TYPE}}{{NAME}}''';
 
     return ScriptTemplates.fromString(
@@ -66,14 +73,20 @@ class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
   /// ```dart
   /// Future<void> openPageSettings();
   /// ```
-  static String abstractServiceMethod({required RouteMeta meta, required String methodName}) {
+  static String abstractServiceMethod({
+    required RouteMeta meta,
+    required String methodName,
+  }) {
     const String _methodTemplate = '''
     Future<{{GENERIC}}> {{NAME}}();
     ''';
 
     return ScriptTemplates.fromString(
       _methodTemplate,
-      values: <String, dynamic>{'NAME': methodName, 'GENERIC': meta.methodGeneric},
+      values: <String, dynamic>{
+        'NAME': methodName,
+        'GENERIC': meta.methodGeneric,
+      },
     );
   }
 
@@ -88,7 +101,11 @@ class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
   /// Future<void> openPageSettings() =>
   ///     pushToRoot(PageSettings());
   /// ```
-  static String serviceMethod({required RouteMeta meta, required String methodName, required String routeName}) {
+  static String serviceMethod({
+    required RouteMeta meta,
+    required String methodName,
+    required String routeName,
+  }) {
     const String _methodTemplate = '''
     @override
     Future<{{GENERIC}}> {{METHOD}}() => {{^isInTab}}pushToRoot{{/isInTab}}{{#isInTab}}pushToCurrentTab{{/isInTab}}({{TYPE}}{{NAME}}());
@@ -124,7 +141,11 @@ class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
   ///   ],
   /// ),
   /// ```
-  static String newMapper({required RouteMeta meta, required String routeName, String? uiComponent}) {
+  static String newMapper({
+    required RouteMeta meta,
+    required String routeName,
+    String? uiComponent,
+  }) {
     final String _mapper =
         '''
     {{TYPE}}Mapper(
@@ -132,7 +153,10 @@ class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
     ),
     ''';
 
-    return ScriptTemplates.fromString(_mapper, values: <String, dynamic>{'TYPE': meta.typeName, 'NAME': routeName});
+    return ScriptTemplates.fromString(
+      _mapper,
+      values: <String, dynamic>{'TYPE': meta.typeName, 'NAME': routeName},
+    );
   }
 
   /// Renders a **single builder entry** for an existing mapper’s `routes:` list.
@@ -149,9 +173,17 @@ class {{TYPE}}{{NAME}} extends Nav{{TYPE}}<{{GENERIC}}> {
   /// ```dart
   /// MadRouteBuilder<PageSettings>((_) => SettingsPage()),
   /// ```
-  static String mapper({required RouteMeta meta, required String routeName, String? uiComponent}) {
-    final String _mapper = '''MadRouteBuilder<{{TYPE}}{{NAME}}>((_) => ${uiComponent ?? ''}),''';
+  static String mapper({
+    required RouteMeta meta,
+    required String routeName,
+    String? uiComponent,
+  }) {
+    final String _mapper =
+        '''MadRouteBuilder<{{TYPE}}{{NAME}}>((_) => ${uiComponent ?? ''}),''';
 
-    return ScriptTemplates.fromString(_mapper, values: <String, dynamic>{'TYPE': meta.typeName, 'NAME': routeName});
+    return ScriptTemplates.fromString(
+      _mapper,
+      values: <String, dynamic>{'TYPE': meta.typeName, 'NAME': routeName},
+    );
   }
 }

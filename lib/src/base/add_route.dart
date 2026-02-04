@@ -18,7 +18,11 @@ typedef ClassWhere = bool Function(ClassDeclaration c);
 /// This class operates by analyzing and modifying Dart source files
 /// using the `analyzer` package.
 class AddRoute {
-  const AddRoute({required this.routeName, required this.config, required this.meta});
+  const AddRoute({
+    required this.routeName,
+    required this.config,
+    required this.meta,
+  });
 
   /// The raw route name (e.g., `Settings`, `Profile`, `MainTab`).
   final String routeName;
@@ -51,10 +55,17 @@ class AddRoute {
   /// rendered template immediately after it.
   ///
   /// Throws a [RouteInsertionException] if no matching class is found.
-  Future<void> addRouteClass({required String renderedTemplate, required String baseClass}) async {
+  Future<void> addRouteClass({
+    required String renderedTemplate,
+    required String baseClass,
+  }) async {
     final String routesPath = config.routesPath;
     await FileManager(routesPath).updateFile(
-      content: _insertAfterLastRoute(routesPath: routesPath, renderedTemplate: renderedTemplate, baseClass: baseClass),
+      content: _insertAfterLastRoute(
+        routesPath: routesPath,
+        renderedTemplate: renderedTemplate,
+        baseClass: baseClass,
+      ),
       dirPathContainsFile: true,
     );
   }
@@ -66,9 +77,15 @@ class AddRoute {
   /// Otherwise, a new mapper section is created.
   ///
   /// Throws a [MapperNotFoundException] or [RoutersMethodInvalidException] if insertion fails.
-  Future<void> addMapper({required String fullNewMapperTemplate, required String renderedTemplate}) async {
+  Future<void> addMapper({
+    required String fullNewMapperTemplate,
+    required String renderedTemplate,
+  }) async {
     await FileManager(config.routeMapperPath).updateFile(
-      content: _insertPageMapper(fullNewMapperTemplate: fullNewMapperTemplate, renderedTemplate: renderedTemplate),
+      content: _insertPageMapper(
+        fullNewMapperTemplate: fullNewMapperTemplate,
+        renderedTemplate: renderedTemplate,
+      ),
       dirPathContainsFile: true,
     );
   }
@@ -99,7 +116,10 @@ class AddRoute {
       content: _insertAfterLastMethod(
         servicePath: config.serviceImplPath ?? '',
         renderedTemplate: renderedServiceImplTemplate,
-        where: _extendsOneOf(<String>['$serviceName$impl', '$tabServiceName$impl']),
+        where: _extendsOneOf(<String>[
+          '$serviceName$impl',
+          '$tabServiceName$impl',
+        ]),
       ),
     );
   }
@@ -115,7 +135,10 @@ class AddRoute {
     required String renderedTemplate,
     required String baseClass,
   }) {
-    final ClassDeclaration? declaration = _findDeclaration(path: routesPath, where: _extendsContains(baseClass));
+    final ClassDeclaration? declaration = _findDeclaration(
+      path: routesPath,
+      where: _extendsContains(baseClass),
+    );
     if (declaration == null) {
       throw RouteInsertionException(routesPath);
     }
@@ -136,7 +159,10 @@ class AddRoute {
     required String renderedTemplate,
     required ClassWhere where,
   }) {
-    final ClassDeclaration? declaration = _findDeclaration(path: servicePath, where: where);
+    final ClassDeclaration? declaration = _findDeclaration(
+      path: servicePath,
+      where: where,
+    );
     if (declaration == null) {
       throw ServiceInsertionException(servicePath);
     }
@@ -150,7 +176,10 @@ class AddRoute {
   /// Finds the last class in the given file that satisfies [where].
   ///
   /// Returns `null` if no matching class is found.
-  ClassDeclaration? _findDeclaration({required String path, required ClassWhere where}) {
+  ClassDeclaration? _findDeclaration({
+    required String path,
+    required ClassWhere where,
+  }) {
     final SomeParsedUnitResult unitResult = AnalyzerUtils.getParsedUnit(path);
     if (unitResult is ParsedUnitResult) {
       final CompilationUnit unit = unitResult.unit;
@@ -177,7 +206,10 @@ class AddRoute {
   ///
   /// Throws [MapperNotFoundException] if the mapper class is missing,
   /// or [RoutersMethodInvalidException] if the `routers` body/structure is invalid.
-  String _insertPageMapper({required String fullNewMapperTemplate, required String renderedTemplate}) {
+  String _insertPageMapper({
+    required String fullNewMapperTemplate,
+    required String renderedTemplate,
+  }) {
     final ClassDeclaration? declaration = _findDeclaration(
       path: config.routeMapperPath,
       where: _extendsContains(routerMapperName),
@@ -201,16 +233,20 @@ class AddRoute {
       // If we find the correct mapper type, try to insert into its routes list
       if (element.methodName.name.startsWith(meta.typeName)) {
         for (final Expression args in element.argumentList.arguments) {
-          final NamedExpression? named = args.getNodeOfExactType<NamedExpression>();
+          final NamedExpression? named = args
+              .getNodeOfExactType<NamedExpression>();
           if (named == null) continue;
 
           final String name = named.name.label.name;
           if (name != routesArgs) continue;
 
-          final ListLiteral? list = named.expression.getNodeOfExactType<ListLiteral>();
+          final ListLiteral? list = named.expression
+              .getNodeOfExactType<ListLiteral>();
           if (list == null) continue;
 
-          final String content = File(config.routeMapperPath).readAsStringSync();
+          final String content = File(
+            config.routeMapperPath,
+          ).readAsStringSync();
           final int endOffset = list.rightBracket.offset;
 
           return '${content.substring(0, endOffset)}$renderedTemplate\n${content.substring(endOffset)}';
@@ -236,14 +272,18 @@ class AddRoute {
   /// Returns a predicate that matches any class whose superclass name
   /// contains the given [text].
   ClassWhere _extendsContains(String text) {
-    return (ClassDeclaration c) => c.extendsClause?.superclass.toString().contains(text) ?? false;
+    return (ClassDeclaration c) =>
+        c.extendsClause?.superclass.toString().contains(text) ?? false;
   }
 
   /// Returns a predicate that matches classes implementing any of [names].
   ClassWhere _implementsAny(List<String> names) {
     return (ClassDeclaration c) {
-      final List<NamedType> impl = c.implementsClause?.interfaces ?? const <NamedType>[];
-      return impl.any((NamedType interface) => names.contains(interface.name.lexeme));
+      final List<NamedType> impl =
+          c.implementsClause?.interfaces ?? const <NamedType>[];
+      return impl.any(
+        (NamedType interface) => names.contains(interface.name.lexeme),
+      );
     };
   }
 }

@@ -67,9 +67,16 @@ class AddRouteCommand extends ScriptCommand<bool> {
     output.debug('BottomSheet Route: $bottomSheet');
     output.debug('Dialog Route: $dialog');
     output.debug('Tab Holder Route: $tabHolder');
-    final int trueCount = <bool>[page, bottomSheet, dialog, tabHolder].where((bool e) => e).length;
+    final int trueCount = <bool>[
+      page,
+      bottomSheet,
+      dialog,
+      tabHolder,
+    ].where((bool e) => e).length;
     if (trueCount == 0) {
-      output.error('Need route type. Choose one: --page, --bottomSheet, --dialog, --tabHolder');
+      output.error(
+        'Need route type. Choose one: --page, --bottomSheet, --dialog, --tabHolder',
+      );
 
       return false;
     }
@@ -78,9 +85,16 @@ class AddRouteCommand extends ScriptCommand<bool> {
       return false;
     }
 
-    final AddRouteConfig config = ConfigReader.fromFile(configPath ?? '', transformer: AddRouteConfig.fromJson);
+    final AddRouteConfig config = ConfigReader.fromFile(
+      configPath ?? '',
+      transformer: AddRouteConfig.fromJson,
+    );
 
-    final SimpleAddRoute addRoute = SimpleAddRoute(routeName: routeName ?? '', config: config, meta: _routeMeta);
+    final SimpleAddRoute addRoute = SimpleAddRoute(
+      routeName: routeName ?? '',
+      config: config,
+      meta: _routeMeta,
+    );
 
     await addRoute.run(uiComponent: uiComponent);
 

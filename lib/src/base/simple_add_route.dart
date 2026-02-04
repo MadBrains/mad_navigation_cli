@@ -27,7 +27,11 @@ class SimpleAddRoute extends AddRoute {
   /// - [routeName] is a PascalCase name used for class/method generation (e.g., `Settings`).
   /// - [config] provides file paths and generation flags.
   /// - [meta] describes route type (page/dialog/bottom sheet/tab holder).
-  const SimpleAddRoute({required super.routeName, required super.config, required super.meta});
+  const SimpleAddRoute({
+    required super.routeName,
+    required super.config,
+    required super.meta,
+  });
 
   /// Executes the full route creation pipeline:
   ///
@@ -45,16 +49,25 @@ class SimpleAddRoute extends AddRoute {
   Future<void> run({String? uiComponent}) async {
     // 1) Insert the route class
     await addRouteClass(
-      renderedTemplate: RouteTemplates.routeClass(meta: meta, routeName: routeName),
+      renderedTemplate: RouteTemplates.routeClass(
+        meta: meta,
+        routeName: routeName,
+      ),
       baseClass: meta.baseClass,
     );
 
     // 2) Update navigation services if enabled
     if (config.addToService) {
-      final String methodName = RouteTemplates.methodName(meta: meta, routeName: routeName);
+      final String methodName = RouteTemplates.methodName(
+        meta: meta,
+        routeName: routeName,
+      );
 
       await addToService(
-        renderedServiceTemplate: RouteTemplates.abstractServiceMethod(meta: meta, methodName: methodName),
+        renderedServiceTemplate: RouteTemplates.abstractServiceMethod(
+          meta: meta,
+          methodName: methodName,
+        ),
         renderedServiceImplTemplate: RouteTemplates.serviceMethod(
           meta: meta,
           methodName: methodName,
@@ -65,8 +78,16 @@ class SimpleAddRoute extends AddRoute {
 
     // 3) Update route mapper
     await addMapper(
-      fullNewMapperTemplate: RouteTemplates.newMapper(meta: meta, routeName: routeName, uiComponent: uiComponent),
-      renderedTemplate: RouteTemplates.mapper(meta: meta, routeName: routeName, uiComponent: uiComponent),
+      fullNewMapperTemplate: RouteTemplates.newMapper(
+        meta: meta,
+        routeName: routeName,
+        uiComponent: uiComponent,
+      ),
+      renderedTemplate: RouteTemplates.mapper(
+        meta: meta,
+        routeName: routeName,
+        uiComponent: uiComponent,
+      ),
     );
   }
 }
